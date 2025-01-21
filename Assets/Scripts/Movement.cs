@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SingleResponsibilityTest : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     [Header("Movement")]
     [Tooltip("Horizontal Speed")]
@@ -17,16 +17,6 @@ public class SingleResponsibilityTest : MonoBehaviour
     [SerializeField] private KeyCode leftKey;
     [SerializeField] private KeyCode rightKey;
 
-    [Header("Audio")]
-    [SerializeField] private AudioClip audioClip;
-    [SerializeField] private AudioSource audioSource;
-
-    [Header("Effects")]
-    [SerializeField] private ParticleSystem particleSys;
-
-    [Header("Collision")]
-    [SerializeField] LayerMask wallLayer;
-
     private Vector3 inputVector;
     private float currentSpeed;
     private CharacterController characterController;
@@ -36,12 +26,6 @@ public class SingleResponsibilityTest : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         initialYPosition = transform.position.y;
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
     }
 
     // Update is called once per frame
@@ -76,7 +60,7 @@ public class SingleResponsibilityTest : MonoBehaviour
             xInput++;
         }
 
-        inputVector = new Vector3 (xInput, 0, zInput);
+        inputVector = new Vector3(xInput, 0, zInput);
     }
 
     private void Move(Vector3 inputVector)
@@ -91,30 +75,11 @@ public class SingleResponsibilityTest : MonoBehaviour
         }
         else
         {
-            currentSpeed =Mathf.Lerp(currentSpeed, moveSpeed, Time.deltaTime * accelerationMoveSpeed);
+            currentSpeed = Mathf.Lerp(currentSpeed, moveSpeed, Time.deltaTime * accelerationMoveSpeed);
         }
 
         Vector3 movement = inputVector.normalized * currentSpeed * Time.deltaTime;
         characterController.Move(movement);
-        transform.position = new Vector3 (transform.position.x, initialYPosition, transform.position.z);
-    }
-
-    private void PlayAudioClip()
-    {
-        audioSource.Play();
-    }
-
-    private void PlayParticleEffect()
-    {
-        particleSys.Play();
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if ((wallLayer.value & (1 << hit.gameObject.layer)) > 0)
-        {
-            PlayAudioClip();
-            PlayParticleEffect();
-        }
+        transform.position = new Vector3(transform.position.x, initialYPosition, transform.position.z);
     }
 }
